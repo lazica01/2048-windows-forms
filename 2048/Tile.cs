@@ -10,7 +10,7 @@ using System.IO;
 
 namespace _2048
 {
-    class Tile
+    public class Tile
     {
         public static int offsetX = 60;
         public static int offsetY = 250;
@@ -26,7 +26,6 @@ namespace _2048
             this.i = i;
             this.j = j;
             ChangePosition(i, j);
-            ChangePosition(i+2, j+2);
 
             UpdateImage(value);
         }
@@ -39,6 +38,9 @@ namespace _2048
         private void ChangePosition(int i, int j)
         {
             pb.Location = new Point(offsetX + j * 100, offsetY + i * 100);
+            if (Form2048.tileMat[i][j] != null)
+                Form2048.tileMat[i][j].Dispose();
+            Form2048.tileMat[i][j] = this;
             //ovo ce da bude mnogo komplikovanija funkcija sa animacijama
             //     2|------------------>
             //             1|---------->
@@ -46,6 +48,10 @@ namespace _2048
             // ovo na kraju implementiramo.
             pb.Update();
 
+        }
+        public void Dispose()
+        {
+            this.pb.Dispose();
         }
         /*
         public void Up()
