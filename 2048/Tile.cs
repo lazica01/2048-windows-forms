@@ -14,10 +14,14 @@ namespace _2048
     {
         public static int offsetX = 60;
         public static int offsetY = 250;
+        public static Form2048 game;
 
         public PictureBox pb;
         private int i, j;
         private int value;
+        private int moveDistanceH;
+        private int moveDistanceV;
+
 
         public Tile(int i, int j, int value)
         {
@@ -25,7 +29,8 @@ namespace _2048
             pb.Size = new Size(90, 90);
             this.i = i;
             this.j = j;
-            ChangePosition(i, j);
+            pb.Location = new Point(offsetX + j * 100, offsetY + i * 100);
+            //ChangePosition(i, j);
 
             UpdateImage(value);
         }
@@ -35,18 +40,30 @@ namespace _2048
             this.value = value;
             pb.Image = Form2048.images[value.ToString()];
         }
-        private void ChangePosition(int i, int j)
+        public void MoveTick()
         {
-            pb.Location = new Point(offsetX + j * 100, offsetY + i * 100);
+            int x = pb.Location.X, y = pb.Location.Y;
+            pb.Location = new Point(x+moveDistanceH, y+moveDistanceV);
+            game.Update();
+        }
+        public void ChangePosition(int i, int j)
+        {
+            //pb.Location = new Point(offsetX + j * 100, offsetY + i * 100);
             if (Form2048.tileMat[i][j] != null)
                 Form2048.tileMat[i][j].Dispose();
             Form2048.tileMat[i][j] = this;
+
+
+            moveDistanceH = -5 * (this.j - j);
+            moveDistanceV = -5 * (this.i - i);
+            Form2048.toMove.Add(this);
+
+
             //ovo ce da bude mnogo komplikovanija funkcija sa animacijama
             //     2|------------------>
             //             1|---------->
             // naprimer 1 i 2 ce u isto vreme da stignu na cilj treba malo matematikica ovde xD
             // ovo na kraju implementiramo.
-            pb.Update();
 
         }
         public void Dispose()

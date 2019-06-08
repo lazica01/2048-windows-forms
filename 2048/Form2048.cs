@@ -17,16 +17,19 @@ namespace _2048
         public static Timer gameTimer;
         public static Tile[][] tileMat;
         public static int n = 4, m = 4;
-
+        public static List<Tile> toMove;
+        public static int ticksToMove = 0;
+        Random r = new Random();
         public Form2048()
         {
             InitializeComponent();
             Form2048.images = LoadImages(@"..\..\..\Slike");
-
+            Form2048.toMove = new List<Tile>();
+            Tile.game = this;
             this.Size = new Size(530, 740);
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             gameTimer = new Timer();
-            gameTimer.Interval = 20;
+            gameTimer.Interval = 30;
             gameTimer.Tick += GameLoop ;
 
         }
@@ -58,9 +61,7 @@ namespace _2048
             }
 
             CreateRandom();
-            gameTimer.Start();
-
-
+            CreateRandom();
         }
 
         private void Form2048_MouseMove(object sender, MouseEventArgs e)
@@ -76,30 +77,47 @@ namespace _2048
                     if (tileMat[i][j] == null)
                         empty.Add(new Point(i, j));
 
-            Random r = new Random();
             Point point = empty[r.Next(empty.Count-1)];
             int i1 = point.X;
             int j1 = point.Y;
             tileMat[i1][j1] = new Tile(i1, j1, 2);
             Controls.Add(tileMat[i1][j1].pb);
         }
-
+        //da bi menjao pozicije jedino sto ti treba je Tile.ChangePosition(i, j)... sve ostale je automatski u tu funkciju
         private void PlayUp()
         {
+            PlayAll();
         }
         private void PlayDown()
         {
+            PlayAll();
         }
         private void PlayLeft()
         {
+            PlayAll();
         }
         private void PlayRight()
         {
+            PlayAll();
+        }
+        private void PlayAll()
+        {
+            CreateRandom();
+            ticksToMove = 20;
+
         }
 
         private void GameLoop(object sender, EventArgs e)
         {
-            label1.Text = "a";
+            if (toMove.Count > 0 && ticksToMove>0)
+            {
+                foreach (Tile t in toMove)
+                    t.MoveTick();
+                ticksToMove--;
+            }
+            if(ticksToMove==0)
+                toMove.Clear();
+
         }
     }
 }
