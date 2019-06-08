@@ -83,6 +83,20 @@ namespace _2048
             tileMat[i1][j1] = new Tile(i1, j1, 2);
             Controls.Add(tileMat[i1][j1].pb);
         }
+
+        private void PlayUp()
+        {
+        }
+        private void PlayDown()
+        {
+        }
+        private void PlayLeft()
+        {
+        }
+        private void PlayRight()
+        {
+        }
+
         private void GameLoop(object sender, EventArgs e)
         {
             label1.Text = "a";
