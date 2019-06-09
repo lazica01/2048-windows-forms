@@ -45,7 +45,8 @@ namespace _2048
             t.Interval = 40;
             t.Tick += MouseMotion;
             t.Start();
-
+            this.Icon = Icon.ExtractAssociatedIcon(@"..\..\..\Slike\icon.ico");
+            this.Text = "Felix 2048";
         }
         public Dictionary<String, Image> LoadImages(string path)
         {
