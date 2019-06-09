@@ -19,18 +19,32 @@ namespace _2048
         public static int n = 4, m = 4;
         public static List<Tile> toMove;
         public static int ticksToMove = 0;
+        public static Queue<Point> mousePositions;
+
+
         Random r = new Random();
+        bool mouseDown;
+        int mouseX, mouseY;
         public Form2048()
         {
             InitializeComponent();
             Form2048.images = LoadImages(@"..\..\..\Slike");
             Form2048.toMove = new List<Tile>();
+            Form2048.mousePositions = new Queue<Point>();
+
+
+
             Tile.game = this;
             this.Size = new Size(530, 740);
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             gameTimer = new Timer();
             gameTimer.Interval = 30;
             gameTimer.Tick += GameLoop ;
+
+            Timer t = new Timer();
+            t.Interval = 40;
+            t.Tick += MouseMotion;
+            t.Start();
 
         }
         public Dictionary<String, Image> LoadImages(string path)
@@ -67,7 +81,9 @@ namespace _2048
         private void Form2048_MouseMove(object sender, MouseEventArgs e)
         {
             var relativePoint = this.PointToClient(Cursor.Position);
-            label1.Text = relativePoint.ToString();
+            mouseX = relativePoint.X;
+            mouseY = relativePoint.Y;
+            //label1.Text = relativePoint.ToString();
         }
         private void CreateRandom()
         {
@@ -86,18 +102,22 @@ namespace _2048
         //da bi menjao pozicije jedino sto ti treba je Tile.ChangePosition(i, j)... sve ostale je automatski u tu funkciju
         private void PlayUp()
         {
+            label1.Text = "UP";
             PlayAll();
         }
         private void PlayDown()
         {
+            label1.Text = "DOWN";
             PlayAll();
         }
         private void PlayLeft()
         {
+            label1.Text = "LEFT";
             PlayAll();
         }
         private void PlayRight()
         {
+            label1.Text = "RIGHT";
             PlayAll();
         }
         private void PlayAll()
@@ -119,5 +139,68 @@ namespace _2048
                 toMove.Clear();
 
         }
+        private void PlayMouse()
+        {
+            if (mousePositions.Count > 1)
+            {
+                Point first = mousePositions.Peek();
+                int sumX = mouseX - first.X;
+                int sumY = mouseY - first.Y;
+
+                if (Math.Abs(sumX) > Math.Abs(sumY))
+                {
+                    if (sumX > 250)
+                    {
+                        PlayRight();
+                        mousePositions.Clear();
+                    }
+                    else if (sumX < -250)
+                    {
+
+                        PlayLeft();
+                        mousePositions.Clear();
+                    }
+                }
+                else
+                {
+                    if (sumY > 250)
+                    {
+                        PlayDown();
+                        mousePositions.Clear();
+                    }
+                    else if (sumY < -250)
+                    {
+                        PlayUp();
+                        mousePositions.Clear();
+                    }
+                }
+            }
+        }
+        private void MouseMotion(object sender, EventArgs e)
+        {
+            if (mouseDown)
+            {
+                mousePositions.Enqueue(new Point(mouseX, mouseY));
+                PlayMouse();
+            }
+            else
+            {
+                PlayMouse();
+                mousePositions.Clear();
+            }
+
+            if (mousePositions.Count > 4)
+                mousePositions.Dequeue();
+        }
+        private void Form2048_MouseDown(object sender, MouseEventArgs e)
+        {
+            mouseDown = true;
+        }
+
+        private void Form2048_MouseUp(object sender, MouseEventArgs e)
+        {
+            mouseDown = false;
+        }
+
     }
 }

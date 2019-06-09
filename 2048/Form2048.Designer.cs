@@ -49,6 +49,8 @@
             this.Name = "Form2048";
             this.Text = "Form2048";
             this.Load += new System.EventHandler(this.Form2048_Load);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form2048_MouseUp);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form2048_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form2048_MouseMove);
             this.ResumeLayout(false);
             this.PerformLayout();
