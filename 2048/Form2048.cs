@@ -73,11 +73,30 @@ namespace _2048
                     tileMat[j] = new Tile[m];
                 }
             }
+            PictureBox restart = new PictureBox();
+            restart.Size = new Size(110, 50);
+            restart.Location = new Point(50, 180);
+            restart.Click += Restart;
+            restart.BackColor = Color.Transparent;
+            Controls.Add(restart);
+            restart.Image = images["restart"];
 
             CreateRandom();
             CreateRandom();
         }
+        private void Restart(object sender, EventArgs e)
+        {
+            for (int i = 0; i < n; i++)
+                for (int j = 0; j < m; j++)
+                    if (tileMat[i][j] != null)
+                    {
+                        tileMat[i][j].Dispose();
+                        tileMat[i][j] = null;
+                    }
 
+            CreateRandom();
+            CreateRandom();
+        }
         private void Form2048_MouseMove(object sender, MouseEventArgs e)
         {
             var relativePoint = this.PointToClient(Cursor.Position);
