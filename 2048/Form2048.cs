@@ -18,19 +18,23 @@ namespace _2048
         public static Tile[][] tileMat;
         public static int n = 4, m = 4;
         public static List<Tile> toMove;
+        public static List<Tile> toDraw;
         public static int ticksToMove = 0;
         public static Queue<Point> mousePositions;
+        public static bool animationPlaying = false;
 
 
         Random r = new Random();
         bool mouseDown;
         int mouseX, mouseY;
+        int tickRate = 20;
         public Form2048()
         {
             InitializeComponent();
             Form2048.images = LoadImages(@"..\..\..\Slike");
             Form2048.toMove = new List<Tile>();
             Form2048.mousePositions = new Queue<Point>();
+            Form2048.toDraw = new List<Tile>();
 
 
 
@@ -38,7 +42,7 @@ namespace _2048
             this.Size = new Size(530, 740);
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             gameTimer = new Timer();
-            gameTimer.Interval = 30;
+            gameTimer.Interval = 20;
             gameTimer.Tick += GameLoop ;
             gameTimer.Start();
 
@@ -124,66 +128,68 @@ namespace _2048
         private void PlayUp()
         {
             label1.Text = "UP";
+            for (int j = 0; j < 4; j++)
+                for (int i = 0; i < 4; i++)
+                    if (tileMat[i][j] != null)
+                        tileMat[i][j].Up();
             PlayAll();
         }
         private void PlayDown()
         {
             label1.Text = "DOWN";
+            for (int j = 0; j < 4; j++)
+                for (int i = 3; i >= 0; i--)
+                    if (tileMat[i][j] != null)
+                        tileMat[i][j].Down();
             PlayAll();
         }
         private void PlayLeft()
         {   
-            bool move = false;
             label1.Text = "LEFT";
-            for (int i = 0; i < n; i++) {
-                for (int j = 1; j < m; j++) {
+            for (int i = 0; i < 4; i++)
+                for (int j = 0; j < 4; j++)
                     if (tileMat[i][j] != null)
-                    {
-                        int t = j;
-                        do
-                        {
-                            move = tileMat[i][j].Left(i, --t);
-                        } while (move == true); 
-                    }
-                }
-            }
+                        tileMat[i][j].Left();
             PlayAll();
         }
         private void PlayRight()
         {
-            bool move = false;
             label1.Text = "RIGHT";
-            for (int i = 0; i < n; i++ )
-            {
-                for (int j = tileMat[i].Length - 1; j >= 0; j-- )
-                {
-                    if (tileMat[i][j] != null) {
-                        int t = j;
-                        do
-                        {
-                            move = tileMat[i][j].Right(i, ++t);
-                        } while (move == true);
-                    }
-                }
-            }
+            for (int i = 0; i < 4; i++)
+                for (int j = 3; j >= 0; j--)
+                    if (tileMat[i][j] != null)
+                        tileMat[i][j].Right();
             PlayAll();
         }
         private void PlayAll()
         {
             CreateRandom();
-            ticksToMove = 20;
+            ticksToMove = tickRate;
+            Form2048.animationPlaying = true;
+
         }
 
         private void GameLoop(object sender, EventArgs e)
         {
-            if (toMove.Count > 0 && ticksToMove>0)
+          
+            if (toMove.Count > 0 && Form2048.animationPlaying)
             {
                 foreach (Tile t in toMove)
                     t.MoveTick();
                 ticksToMove--;
             }
-            if(ticksToMove==0)
+            if (ticksToMove == 0)
+            {
                 toMove.Clear();
+                if (animationPlaying)
+                {
+                    foreach (Tile t in toDraw)
+                        t.UpdateImage(t.value * 2);
+                    toDraw.Clear();
+                }
+                animationPlaying = false;
+
+            }
 
         }
         private void PlayMouse()
@@ -239,6 +245,11 @@ namespace _2048
             if (mousePositions.Count > 4)
                 mousePositions.Dequeue();
         }
+
+
+
+
+
         private void Form2048_MouseDown(object sender, MouseEventArgs e)
         {
             mouseDown = true;
@@ -262,6 +273,18 @@ namespace _2048
                 case Keys.D:
                     PlayRight();
                     break;
+                case Keys.W:
+                case Keys.K:
+                case Keys.Up:
+                    PlayUp();
+                    break;
+                case Keys.S:
+                case Keys.J:
+                case Keys.Down:
+                    PlayDown();
+                    break;
+
+
             }
         }
 

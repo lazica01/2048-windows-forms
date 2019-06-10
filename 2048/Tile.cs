@@ -50,6 +50,10 @@ namespace _2048
         public void ChangePosition(int i, int j)
         {
             //pb.Location = new Point(offsetX + j * 100, offsetY + i * 100);
+            if (i == this.i && j == this.j)
+                return;
+            
+            
             if (Form2048.tileMat[i][j] != null)
                 Form2048.tileMat[i][j].Dispose();
             Form2048.tileMat[i][j] = this;
@@ -65,6 +69,11 @@ namespace _2048
             //             1|---------->
             // naprimer 1 i 2 ce u isto vreme da stignu na cilj treba malo matematikica ovde xD
             // ovo na kraju implementiramo.
+            Form2048.tileMat[this.i][this.j]=null;
+
+            this.i = i;
+            this.j = j;
+
 
         }
         public void Dispose()
@@ -72,45 +81,87 @@ namespace _2048
             this.pb.Dispose();
         }
         
-        public void Up(int i, int j)
+        public void Up()
         {
-
-        }
-        public void Down(int i, int j)
-        {
-        }
-        public bool Left(int i, int j)
-        {
-            if (j < 0) return false;
-            if (Form2048.tileMat[i][j] == null)
+            int setI=0;
+            for(int i = this.i; i!=0; i--)
             {
-                this.ChangePosition(i, j);
-                return true;
-            } 
-            if (this.value != Form2048.tileMat[i][j].value) return false;
-            if(Form2048.tileMat[i][j].value == this.value) {
-                this.ChangePosition(i, j);
-                this.value *= 2;
-                this.UpdateImage(this.value);
+                if (Form2048.tileMat[i - 1][j] != null)
+                    if (Form2048.tileMat[i - 1][j].value == value)
+                    {
+                        Form2048.toDraw.Add(this);
+                        setI = i - 1;
+                        break;
+                    }
+                    else
+                    {
+                        setI = i;
+                        break;
+                    }
             }
-            return true;
-
+            ChangePosition(setI, this.j);
         }
-        public bool Right(int i, int j)
+        public void Down()
         {
-            if (j >= Form2048.m) return false;
-            if (Form2048.tileMat[i][j] == null) {
-                this.ChangePosition(i, j);
-                return true;
+            int setI = 3;
+            for (int i = this.i; i != 3; i++)
+            {
+                if (Form2048.tileMat[i + 1][j] != null)
+                    if (Form2048.tileMat[i + 1][j].value == value)
+                    {
+                        Form2048.toDraw.Add(this);
+                        setI = i + 1;
+                        break;
+                    }
+                    else
+                    {
+                        setI = i;
+                        break;
+                    }
             }
-            if (this.value != Form2048.tileMat[i][j].value) return false;
-            if (Form2048.tileMat[i][j].value == this.value) {
-                this.ChangePosition(i, j);
-                this.value *= 2;
-                this.UpdateImage(this.value);
-            }
-            return true;
+            ChangePosition(setI, this.j);
         }
+        public void Left()
+        {
+            int setJ = 0;
+            for (int j = this.j; j != 0; j--)
+            {
+                if (Form2048.tileMat[i][j - 1] != null)
+                    if (Form2048.tileMat[i][j - 1].value == value)
+                    {
+                        Form2048.toDraw.Add(this);
+                        setJ = j - 1;
+                        break;
+                    }
+                    else
+                    {
+                        setJ = j;
+                        break;
+                    }
+            }
+            ChangePosition(this.i, setJ);
+        }
+        public void Right()
+        {
+            int setJ = 3;
+            for (int j = this.j; j != 3; j++)
+            {
+                if (Form2048.tileMat[i][j + 1] != null)
+                    if (Form2048.tileMat[i][j + 1].value == value)
+                    {
+                        Form2048.toDraw.Add(this);
+                        setJ = j + 1;
+                        break;
+                    }
+                    else
+                    {
+                        setJ = j;
+                        break;
+                    }
+            }
+            ChangePosition(this.i, setJ);
+        }
+         
         
 
     }
