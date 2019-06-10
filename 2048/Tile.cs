@@ -26,6 +26,7 @@ namespace _2048
 
         public Tile(int i, int j, int value)
         {
+            this.value = value;
             pb = new PictureBox();
             pb.Size = new Size(90, 90);
             this.i = i;
@@ -33,12 +34,11 @@ namespace _2048
             pb.Location = new Point(offsetX + j * 100, offsetY + i * 100);
             //ChangePosition(i, j);
 
-            UpdateImage(value);
+            UpdateImage();
         }
      
-        public void UpdateImage(int value)
+        public void UpdateImage()
         {
-            this.value = value;
             pb.Image = Game.images[value.ToString()];
         }
         public void MoveTick()
@@ -58,8 +58,8 @@ namespace _2048
             Game.tileMat[i][j] = this;
 
 
-            moveDistanceH = -5 * (this.j - j);
-            moveDistanceV = -5 * (this.i - i);
+            moveDistanceH = -10 * (this.j - j);
+            moveDistanceV = -10 * (this.i - i);
             Game.toMove.Add(this);
 
 
@@ -88,6 +88,7 @@ namespace _2048
                 if (Game.tileMat[i - 1][j] != null)
                     if (Game.tileMat[i - 1][j].value == value)
                     {
+                        this.value *= 2;
                         Game.toDraw.Add(this);
                         setI = i - 1;
                         break;
@@ -108,6 +109,7 @@ namespace _2048
                 if (Game.tileMat[i + 1][j] != null)
                     if (Game.tileMat[i + 1][j].value == value)
                     {
+                        this.value *= 2;
                         Game.toDraw.Add(this);
                         setI = i + 1;
                         break;
@@ -128,6 +130,7 @@ namespace _2048
                 if (Game.tileMat[i][j - 1] != null)
                     if (Game.tileMat[i][j - 1].value == value)
                     {
+                        this.value *= 2;
                         Game.toDraw.Add(this);
                         setJ = j - 1;
                         break;
@@ -148,6 +151,7 @@ namespace _2048
                 if (Game.tileMat[i][j + 1] != null)
                     if (Game.tileMat[i][j + 1].value == value)
                     {
+                        this.value *= 2;
                         Game.toDraw.Add(this);
                         setJ = j + 1;
                         break;

@@ -30,7 +30,7 @@ namespace _2048
             Game.images = LoadImages(@"..\..\..\Slike");
 
             Tile.game = this;
-            this.Size = new Size(530, 740);
+            this.Size = new Size(526, 740);
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             
 
@@ -99,12 +99,12 @@ namespace _2048
 
                 if (Math.Abs(sumX) > Math.Abs(sumY))
                 {
-                    if (sumX > 250)
+                    if (sumX > 200)
                     {
                         Game.PlayRight();
                         mousePositions.Clear();
                     }
-                    else if (sumX < -250)
+                    else if (sumX < -200)
                     {
 
                         Game.PlayLeft();
@@ -113,12 +113,12 @@ namespace _2048
                 }
                 else
                 {
-                    if (sumY > 250)
+                    if (sumY > 200)
                     {
                         Game.PlayDown();
                         mousePositions.Clear();
                     }
-                    else if (sumY < -250)
+                    else if (sumY < -200)
                     {
                         Game.PlayUp();
                         mousePositions.Clear();

@@ -30,7 +30,7 @@ namespace _2048
             r = new Random();
             form = _form;
             animationPlaying = false;
-            tickRate = 20;
+            tickRate = 10;
             animationTimer = new Timer();
             animationTimer.Interval = 20;
             animationTimer.Tick += GameLoop;
@@ -76,20 +76,22 @@ namespace _2048
             }
             if (ticksToMove == 0)
             {
-                toMove.Clear();
                 if (animationPlaying)
                 {
                     foreach (Tile t in toDraw)
-                        t.UpdateImage(t.value * 2);
+                        t.UpdateImage();
                     toDraw.Clear();
 
                     foreach (Tile t in toDelete)
                         t.Dispose();
                     toDelete.Clear();
-                    CreateRandom();
 
 
                 }
+                if (toMove.Count > 0)
+                    CreateRandom();
+                toMove.Clear();
+
                 animationPlaying = false;
 
             }
@@ -97,6 +99,8 @@ namespace _2048
         }
         public static void PlayUp()
         {
+            if (animationPlaying)
+                return;
             for (int j = 0; j < 4; j++)
                 for (int i = 0; i < 4; i++)
                     if (tileMat[i][j] != null)
@@ -106,7 +110,7 @@ namespace _2048
         public static void PlayDown()
         {
             if (animationPlaying)
-
+                return;
                 for (int j = 0; j < 4; j++)
                     for (int i = 3; i >= 0; i--)
                         if (tileMat[i][j] != null)
@@ -115,6 +119,8 @@ namespace _2048
         }
         public static void PlayLeft()
         {
+            if (animationPlaying)
+                return;
             for (int i = 0; i < 4; i++)
                 for (int j = 0; j < 4; j++)
                     if (tileMat[i][j] != null)
@@ -123,6 +129,8 @@ namespace _2048
         }
         public static void PlayRight()
         {
+            if (animationPlaying)
+                return;
             for (int i = 0; i < 4; i++)
                 for (int j = 3; j >= 0; j--)
                     if (tileMat[i][j] != null)
@@ -131,7 +139,8 @@ namespace _2048
         }
         public static void PlayAll()
         {
-            ticksToMove = tickRate;
+            if(toMove.Count>0)
+                ticksToMove = tickRate;
             animationPlaying = true;
 
         }
