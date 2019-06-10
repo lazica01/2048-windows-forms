@@ -40,6 +40,7 @@ namespace _2048
             gameTimer = new Timer();
             gameTimer.Interval = 30;
             gameTimer.Tick += GameLoop ;
+            gameTimer.Start();
 
             Timer t = new Timer();
             t.Interval = 40;
@@ -81,6 +82,19 @@ namespace _2048
             restart.BackColor = Color.Transparent;
             Controls.Add(restart);
             restart.Image = images["restart"];
+
+            /*tileMat[0][2] = new Tile(0, 2, 2);
+            Controls.Add(tileMat[0][2].pb);
+            tileMat[0][3] = new Tile(0, 3, 2);
+            Controls.Add(tileMat[0][3].pb);*/
+            /* 
+             * Ne radi u ovom gore slucaju 
+             * Radi samo kad postoji broj 2 na nultoj poziciji tipa
+             * 2 0 0 2
+             * 2 2 0 0
+             * 2 0 2 0
+             * ako je 0 2 2 2 nece da nacrta 
+             */
 
             CreateRandom();
             CreateRandom();
@@ -131,8 +145,43 @@ namespace _2048
             PlayAll();
         }
         private void PlayLeft()
-        {
+        {   
             label1.Text = "LEFT";
+            for (int i = 0; i < n; i++) {
+                int pos = 0;
+                bool has = false;
+                Tile searchFor = null;
+                for (int j = 0; j < m; j++) {
+                    if (tileMat[i][j] != null) {
+                        searchFor = tileMat[i][j];
+                        has = true;
+                    }
+                    else has = false;
+                    for (int k = j + 1; k < m; k++) {
+                        Tile currentTile = tileMat[i][k];
+                        if (!has)
+                        {
+                            if (currentTile != null)
+                            {
+                                currentTile.ChangePosition(i, pos);
+                                has = true;
+                                searchFor = currentTile;
+                            }
+                        }
+                        else {
+                            if (currentTile != null && currentTile.value == searchFor.value)
+                            {
+                                currentTile.value *= 2;
+                                currentTile.UpdateImage(currentTile.value);
+                                currentTile.ChangePosition(i, pos++);
+                            }
+                            else if(currentTile != null) {
+                                currentTile.ChangePosition(i, ++pos);
+                            }
+                        }
+                    }
+                }
+            }
             PlayAll();
         }
         private void PlayRight()
@@ -144,7 +193,6 @@ namespace _2048
         {
             CreateRandom();
             ticksToMove = 20;
-
         }
 
         private void GameLoop(object sender, EventArgs e)
@@ -220,6 +268,17 @@ namespace _2048
         private void Form2048_MouseUp(object sender, MouseEventArgs e)
         {
             mouseDown = false;
+        }
+
+        private void Form2048_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode) { 
+                case Keys.A:
+                case Keys.Left:
+                case Keys.H:
+                    PlayLeft();
+                    break;
+            }
         }
 
     }

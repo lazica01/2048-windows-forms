@@ -52,6 +52,7 @@
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form2048_MouseUp);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form2048_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form2048_MouseMove);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form2048_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

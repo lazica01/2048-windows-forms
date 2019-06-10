@@ -18,10 +18,11 @@ namespace _2048
 
         public PictureBox pb;
         private int i, j;
-        private int value;
+        public int value;
         private int moveDistanceH;
         private int moveDistanceV;
 
+        public Tile() { }
 
         public Tile(int i, int j, int value)
         {
@@ -70,40 +71,31 @@ namespace _2048
         {
             this.pb.Dispose();
         }
-        /*
-        public void Up()
+        
+        /*public void Up()
         {
-            if(...)
-               UpdateImage(value)
+            UpdateImage(value);
+            ChangePosition(where.i, where.j);
+        }
+        public void Down(Tile where)
+        {
+               UpdateImage(value);
                
           
-           ChangePosition(end_i, end_j);
+           ChangePosition(where.i, where.j);
         }
-        public void Down()
+        public void Left(int i, int j)
         {
-         * if(...)
-               UpdateImage(value)
-               
-          
-           ChangePosition(end_i, end_j);
+            ChangePosition(i, j);
         }
-        public void Left()
+        public void Right(Tile where)
         {
-         * if(...)
-               UpdateImage(value)
-               
-          
-           ChangePosition(end_i, end_j);
-        }
-        public void Right()
-        {
-         * if(...)
-               UpdateImage(value)
-               
-          
-           ChangePosition(start_i, start_j, end_i, end_j);
-        }
-        */
+            UpdateImage(value);
+
+
+            ChangePosition(where.i, where.j);
+        }*/
+        
 
     }
 }
