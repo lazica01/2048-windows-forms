@@ -72,29 +72,45 @@ namespace _2048
             this.pb.Dispose();
         }
         
-        /*public void Up()
+        public void Up(int i, int j)
         {
-            UpdateImage(value);
-            ChangePosition(where.i, where.j);
-        }
-        public void Down(Tile where)
-        {
-               UpdateImage(value);
-               
-          
-           ChangePosition(where.i, where.j);
-        }
-        public void Left(int i, int j)
-        {
-            ChangePosition(i, j);
-        }
-        public void Right(Tile where)
-        {
-            UpdateImage(value);
 
+        }
+        public void Down(int i, int j)
+        {
+        }
+        public bool Left(int i, int j)
+        {
+            if (j < 0) return false;
+            if (Form2048.tileMat[i][j] == null)
+            {
+                this.ChangePosition(i, j);
+                return true;
+            } 
+            if (this.value != Form2048.tileMat[i][j].value) return false;
+            if(Form2048.tileMat[i][j].value == this.value) {
+                this.ChangePosition(i, j);
+                this.value *= 2;
+                this.UpdateImage(this.value);
+            }
+            return true;
 
-            ChangePosition(where.i, where.j);
-        }*/
+        }
+        public bool Right(int i, int j)
+        {
+            if (j >= Form2048.m) return false;
+            if (Form2048.tileMat[i][j] == null) {
+                this.ChangePosition(i, j);
+                return true;
+            }
+            if (this.value != Form2048.tileMat[i][j].value) return false;
+            if (Form2048.tileMat[i][j].value == this.value) {
+                this.ChangePosition(i, j);
+                this.value *= 2;
+                this.UpdateImage(this.value);
+            }
+            return true;
+        }
         
 
     }

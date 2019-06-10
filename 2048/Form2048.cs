@@ -83,19 +83,6 @@ namespace _2048
             Controls.Add(restart);
             restart.Image = images["restart"];
 
-            /*tileMat[0][2] = new Tile(0, 2, 2);
-            Controls.Add(tileMat[0][2].pb);
-            tileMat[0][3] = new Tile(0, 3, 2);
-            Controls.Add(tileMat[0][3].pb);*/
-            /* 
-             * Ne radi u ovom gore slucaju 
-             * Radi samo kad postoji broj 2 na nultoj poziciji tipa
-             * 2 0 0 2
-             * 2 2 0 0
-             * 2 0 2 0
-             * ako je 0 2 2 2 nece da nacrta 
-             */
-
             CreateRandom();
             CreateRandom();
         }
@@ -146,39 +133,17 @@ namespace _2048
         }
         private void PlayLeft()
         {   
+            bool move = false;
             label1.Text = "LEFT";
             for (int i = 0; i < n; i++) {
-                int pos = 0;
-                bool has = false;
-                Tile searchFor = null;
-                for (int j = 0; j < m; j++) {
-                    if (tileMat[i][j] != null) {
-                        searchFor = tileMat[i][j];
-                        has = true;
-                    }
-                    else has = false;
-                    for (int k = j + 1; k < m; k++) {
-                        Tile currentTile = tileMat[i][k];
-                        if (!has)
+                for (int j = 1; j < m; j++) {
+                    if (tileMat[i][j] != null)
+                    {
+                        int t = j;
+                        do
                         {
-                            if (currentTile != null)
-                            {
-                                currentTile.ChangePosition(i, pos);
-                                has = true;
-                                searchFor = currentTile;
-                            }
-                        }
-                        else {
-                            if (currentTile != null && currentTile.value == searchFor.value)
-                            {
-                                currentTile.value *= 2;
-                                currentTile.UpdateImage(currentTile.value);
-                                currentTile.ChangePosition(i, pos++);
-                            }
-                            else if(currentTile != null) {
-                                currentTile.ChangePosition(i, ++pos);
-                            }
-                        }
+                            move = tileMat[i][j].Left(i, --t);
+                        } while (move == true); 
                     }
                 }
             }
@@ -186,7 +151,21 @@ namespace _2048
         }
         private void PlayRight()
         {
+            bool move = false;
             label1.Text = "RIGHT";
+            for (int i = 0; i < n; i++ )
+            {
+                for (int j = tileMat[i].Length - 1; j >= 0; j-- )
+                {
+                    if (tileMat[i][j] != null) {
+                        int t = j;
+                        do
+                        {
+                            move = tileMat[i][j].Right(i, ++t);
+                        } while (move == true);
+                    }
+                }
+            }
             PlayAll();
         }
         private void PlayAll()
@@ -277,6 +256,11 @@ namespace _2048
                 case Keys.Left:
                 case Keys.H:
                     PlayLeft();
+                    break;
+                case Keys.Right:
+                case Keys.L:
+                case Keys.D:
+                    PlayRight();
                     break;
             }
         }
