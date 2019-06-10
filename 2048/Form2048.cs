@@ -13,38 +13,26 @@ namespace _2048
 
     public partial class Form2048 : Form
     {
-        public static Dictionary<String, Image> images;
-        public static Timer gameTimer;
-        public static Tile[][] tileMat;
-        public static int n = 4, m = 4;
-        public static List<Tile> toMove;
-        public static List<Tile> toDraw;
-        public static int ticksToMove = 0;
-        public static Queue<Point> mousePositions;
-        public static bool animationPlaying = false;
+
+
 
 
         Random r = new Random();
         bool mouseDown;
         int mouseX, mouseY;
-        int tickRate = 20;
+        Queue<Point> mousePositions;
         public Form2048()
         {
             InitializeComponent();
-            Form2048.images = LoadImages(@"..\..\..\Slike");
-            Form2048.toMove = new List<Tile>();
-            Form2048.mousePositions = new Queue<Point>();
-            Form2048.toDraw = new List<Tile>();
 
-
+            Game.Init(this);
+            mousePositions = new Queue<Point>();
+            Game.images = LoadImages(@"..\..\..\Slike");
 
             Tile.game = this;
             this.Size = new Size(530, 740);
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            gameTimer = new Timer();
-            gameTimer.Interval = 20;
-            gameTimer.Tick += GameLoop ;
-            gameTimer.Start();
+            
 
             Timer t = new Timer();
             t.Interval = 40;
@@ -70,38 +58,21 @@ namespace _2048
 
         private void Form2048_Load(object sender, EventArgs e)
         {
-            this.BackgroundImage = images["background"];
-            for (int i = 0; i < n; i++)
-            {
-                tileMat = new Tile[n][];
-                for (int j = 0; j < m; j++)
-                {
-                    tileMat[j] = new Tile[m];
-                }
-            }
+            this.BackgroundImage = Game.images["background"];
+            
             PictureBox restart = new PictureBox();
             restart.Size = new Size(110, 50);
             restart.Location = new Point(50, 180);
             restart.Click += Restart;
             restart.BackColor = Color.Transparent;
             Controls.Add(restart);
-            restart.Image = images["restart"];
+            restart.Image = Game.images["restart"];
 
-            CreateRandom();
-            CreateRandom();
+            Game.Restart();
         }
         private void Restart(object sender, EventArgs e)
         {
-            for (int i = 0; i < n; i++)
-                for (int j = 0; j < m; j++)
-                    if (tileMat[i][j] != null)
-                    {
-                        tileMat[i][j].Dispose();
-                        tileMat[i][j] = null;
-                    }
-
-            CreateRandom();
-            CreateRandom();
+            Game.Restart();
         }
         private void Form2048_MouseMove(object sender, MouseEventArgs e)
         {
@@ -110,88 +81,14 @@ namespace _2048
             mouseY = relativePoint.Y;
             //label1.Text = relativePoint.ToString();
         }
-        private void CreateRandom()
+        public void DrawTile(Tile t)
         {
-            List<Point> empty = new List<Point>();
-            for (int i = 0; i < n; i++)
-                for (int j = 0; j < m; j++)
-                    if (tileMat[i][j] == null)
-                        empty.Add(new Point(i, j));
-
-            Point point = empty[r.Next(empty.Count-1)];
-            int i1 = point.X;
-            int j1 = point.Y;
-            tileMat[i1][j1] = new Tile(i1, j1, 2);
-            Controls.Add(tileMat[i1][j1].pb);
+            Controls.Add(t.pb);
         }
         //da bi menjao pozicije jedino sto ti treba je Tile.ChangePosition(i, j)... sve ostale je automatski u tu funkciju
-        private void PlayUp()
-        {
-            label1.Text = "UP";
-            for (int j = 0; j < 4; j++)
-                for (int i = 0; i < 4; i++)
-                    if (tileMat[i][j] != null)
-                        tileMat[i][j].Up();
-            PlayAll();
-        }
-        private void PlayDown()
-        {
-            label1.Text = "DOWN";
-            for (int j = 0; j < 4; j++)
-                for (int i = 3; i >= 0; i--)
-                    if (tileMat[i][j] != null)
-                        tileMat[i][j].Down();
-            PlayAll();
-        }
-        private void PlayLeft()
-        {   
-            label1.Text = "LEFT";
-            for (int i = 0; i < 4; i++)
-                for (int j = 0; j < 4; j++)
-                    if (tileMat[i][j] != null)
-                        tileMat[i][j].Left();
-            PlayAll();
-        }
-        private void PlayRight()
-        {
-            label1.Text = "RIGHT";
-            for (int i = 0; i < 4; i++)
-                for (int j = 3; j >= 0; j--)
-                    if (tileMat[i][j] != null)
-                        tileMat[i][j].Right();
-            PlayAll();
-        }
-        private void PlayAll()
-        {
-            CreateRandom();
-            ticksToMove = tickRate;
-            Form2048.animationPlaying = true;
+        
 
-        }
-
-        private void GameLoop(object sender, EventArgs e)
-        {
-          
-            if (toMove.Count > 0 && Form2048.animationPlaying)
-            {
-                foreach (Tile t in toMove)
-                    t.MoveTick();
-                ticksToMove--;
-            }
-            if (ticksToMove == 0)
-            {
-                toMove.Clear();
-                if (animationPlaying)
-                {
-                    foreach (Tile t in toDraw)
-                        t.UpdateImage(t.value * 2);
-                    toDraw.Clear();
-                }
-                animationPlaying = false;
-
-            }
-
-        }
+        
         private void PlayMouse()
         {
             if (mousePositions.Count > 1)
@@ -204,13 +101,13 @@ namespace _2048
                 {
                     if (sumX > 250)
                     {
-                        PlayRight();
+                        Game.PlayRight();
                         mousePositions.Clear();
                     }
                     else if (sumX < -250)
                     {
 
-                        PlayLeft();
+                        Game.PlayLeft();
                         mousePositions.Clear();
                     }
                 }
@@ -218,12 +115,12 @@ namespace _2048
                 {
                     if (sumY > 250)
                     {
-                        PlayDown();
+                        Game.PlayDown();
                         mousePositions.Clear();
                     }
                     else if (sumY < -250)
                     {
-                        PlayUp();
+                        Game.PlayUp();
                         mousePositions.Clear();
                     }
                 }
@@ -266,22 +163,22 @@ namespace _2048
                 case Keys.A:
                 case Keys.Left:
                 case Keys.H:
-                    PlayLeft();
+                    Game.PlayLeft();
                     break;
                 case Keys.Right:
                 case Keys.L:
                 case Keys.D:
-                    PlayRight();
+                    Game.PlayRight();
                     break;
                 case Keys.W:
                 case Keys.K:
                 case Keys.Up:
-                    PlayUp();
+                    Game.PlayUp();
                     break;
                 case Keys.S:
                 case Keys.J:
                 case Keys.Down:
-                    PlayDown();
+                    Game.PlayDown();
                     break;
 
 

@@ -39,29 +39,28 @@ namespace _2048
         public void UpdateImage(int value)
         {
             this.value = value;
-            pb.Image = Form2048.images[value.ToString()];
+            pb.Image = Game.images[value.ToString()];
         }
         public void MoveTick()
         {
             int x = pb.Location.X, y = pb.Location.Y;
             pb.Location = new Point(x+moveDistanceH, y+moveDistanceV);
-            game.Update();
         }
         public void ChangePosition(int i, int j)
         {
             //pb.Location = new Point(offsetX + j * 100, offsetY + i * 100);
             if (i == this.i && j == this.j)
                 return;
-            
-            
-            if (Form2048.tileMat[i][j] != null)
-                Form2048.tileMat[i][j].Dispose();
-            Form2048.tileMat[i][j] = this;
+
+
+            if (Game.tileMat[i][j] != null)
+                Game.toDelete.Add(Game.tileMat[i][j]);
+            Game.tileMat[i][j] = this;
 
 
             moveDistanceH = -5 * (this.j - j);
             moveDistanceV = -5 * (this.i - i);
-            Form2048.toMove.Add(this);
+            Game.toMove.Add(this);
 
 
             //ovo ce da bude mnogo komplikovanija funkcija sa animacijama
@@ -69,7 +68,7 @@ namespace _2048
             //             1|---------->
             // naprimer 1 i 2 ce u isto vreme da stignu na cilj treba malo matematikica ovde xD
             // ovo na kraju implementiramo.
-            Form2048.tileMat[this.i][this.j]=null;
+            Game.tileMat[this.i][this.j]=null;
 
             this.i = i;
             this.j = j;
@@ -86,10 +85,10 @@ namespace _2048
             int setI=0;
             for(int i = this.i; i!=0; i--)
             {
-                if (Form2048.tileMat[i - 1][j] != null)
-                    if (Form2048.tileMat[i - 1][j].value == value)
+                if (Game.tileMat[i - 1][j] != null)
+                    if (Game.tileMat[i - 1][j].value == value)
                     {
-                        Form2048.toDraw.Add(this);
+                        Game.toDraw.Add(this);
                         setI = i - 1;
                         break;
                     }
@@ -106,10 +105,10 @@ namespace _2048
             int setI = 3;
             for (int i = this.i; i != 3; i++)
             {
-                if (Form2048.tileMat[i + 1][j] != null)
-                    if (Form2048.tileMat[i + 1][j].value == value)
+                if (Game.tileMat[i + 1][j] != null)
+                    if (Game.tileMat[i + 1][j].value == value)
                     {
-                        Form2048.toDraw.Add(this);
+                        Game.toDraw.Add(this);
                         setI = i + 1;
                         break;
                     }
@@ -126,10 +125,10 @@ namespace _2048
             int setJ = 0;
             for (int j = this.j; j != 0; j--)
             {
-                if (Form2048.tileMat[i][j - 1] != null)
-                    if (Form2048.tileMat[i][j - 1].value == value)
+                if (Game.tileMat[i][j - 1] != null)
+                    if (Game.tileMat[i][j - 1].value == value)
                     {
-                        Form2048.toDraw.Add(this);
+                        Game.toDraw.Add(this);
                         setJ = j - 1;
                         break;
                     }
@@ -146,10 +145,10 @@ namespace _2048
             int setJ = 3;
             for (int j = this.j; j != 3; j++)
             {
-                if (Form2048.tileMat[i][j + 1] != null)
-                    if (Form2048.tileMat[i][j + 1].value == value)
+                if (Game.tileMat[i][j + 1] != null)
+                    if (Game.tileMat[i][j + 1].value == value)
                     {
-                        Form2048.toDraw.Add(this);
+                        Game.toDraw.Add(this);
                         setJ = j + 1;
                         break;
                     }
