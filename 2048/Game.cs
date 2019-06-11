@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using WMPLib;
 
 namespace _2048
 {
@@ -24,6 +25,9 @@ namespace _2048
         public static Timer animationTimer;
         public static Form2048 form;
         public static Random r;
+        public static int score = 0;
+        public static int maxLevel = 2;
+        public static WindowsMediaPlayerClass sound = new WindowsMediaPlayerClass();
         
         public static void Init(Form2048 _form)
         {
@@ -50,6 +54,7 @@ namespace _2048
                     tileMat[j] = new Tile[m];
                 }
             }
+            sound.URL = Path.GetFullPath(@"..\..\..\Sounds\level_up.mp3");
         }
 
         public static void Restart()
@@ -61,7 +66,8 @@ namespace _2048
                         tileMat[i][j].Dispose();
                         tileMat[i][j] = null;
                     }
-
+            score = 0;
+            Form2048.label.Text = score.ToString();
             CreateRandom();
             CreateRandom();
         }
@@ -95,6 +101,8 @@ namespace _2048
                 animationPlaying = false;
 
             }
+
+            Form2048.label.Text = score.ToString();
 
         }
         public static void PlayUp()

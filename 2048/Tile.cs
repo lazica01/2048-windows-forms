@@ -15,6 +15,7 @@ namespace _2048
         public static int offsetX = 60;
         public static int offsetY = 250;
         public static Form2048 game;
+        
 
         public PictureBox pb;
         private int i, j;
@@ -89,6 +90,12 @@ namespace _2048
                     if (Game.tileMat[i - 1][j].value == value)
                     {
                         this.value *= 2;
+                        if (this.value > Game.maxLevel)
+                        {
+                            Game.sound.play();
+                            Game.maxLevel = this.value;
+                        } 
+                        Game.score += this.value;
                         Game.toDraw.Add(this);
                         setI = i - 1;
                         break;
@@ -110,6 +117,12 @@ namespace _2048
                     if (Game.tileMat[i + 1][j].value == value)
                     {
                         this.value *= 2;
+                        if (this.value > Game.maxLevel)
+                        {
+                            Game.maxLevel = this.value;
+                            Game.sound.play();
+                        }
+                        Game.score += this.value;
                         Game.toDraw.Add(this);
                         setI = i + 1;
                         break;
@@ -131,6 +144,12 @@ namespace _2048
                     if (Game.tileMat[i][j - 1].value == value)
                     {
                         this.value *= 2;
+                        if (this.value > Game.maxLevel)
+                        {
+                            Game.maxLevel = this.value;
+                            Game.sound.play();
+                        }
+                        Game.score += this.value;
                         Game.toDraw.Add(this);
                         setJ = j - 1;
                         break;
@@ -152,6 +171,12 @@ namespace _2048
                     if (Game.tileMat[i][j + 1].value == value)
                     {
                         this.value *= 2;
+                        if (this.value > Game.maxLevel)
+                        {
+                            Game.maxLevel = this.value;
+                            Game.sound.play();
+                        }
+                        Game.score += this.value;
                         Game.toDraw.Add(this);
                         setJ = j + 1;
                         break;

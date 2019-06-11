@@ -16,7 +16,7 @@ namespace _2048
 
 
 
-
+        public static Label label;
         Random r = new Random();
         bool mouseDown;
         int mouseX, mouseY;
@@ -67,6 +67,16 @@ namespace _2048
             restart.BackColor = Color.Transparent;
             Controls.Add(restart);
             restart.Image = Game.images["restart"];
+
+            label = new Label();
+            label.Size = new Size(110, 50);
+            label.Location = new Point(50, 130);
+            label.BackColor = Color.Transparent;
+            label.ForeColor = Color.Black;
+            label.Text = "0";
+            label.TextAlign = ContentAlignment.MiddleCenter;
+            label.Font = new Font("Clear Sans", 15); // 
+            Controls.Add(label);
 
             Game.Restart();
         }
@@ -184,6 +194,8 @@ namespace _2048
 
             }
         }
-
+        public new static void Close() {
+            Form2048.Close();
+        }
     }
 }
